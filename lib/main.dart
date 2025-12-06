@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:siak/screens/admin/kelola_jadwal_page.dart';
 import 'package:siak/screens/guru/input_nilai_guru_page.dart';
+import 'package:siak/screens/guru/pengumuman_guru_page.dart';
 import 'package:siak/screens/siswa/nilai_siswa_page.dart';
 import 'package:siak/screens/siswa/pengumuman_siswa_page.dart';
+import 'package:siak/screens/guru/pengumuman_guru_page.dart';
 import 'package:siak/screens/guru/jadwal_guru_page.dart';
 import 'firebase_options.dart';
 import 'screens/admin/admin_page.dart';
@@ -36,10 +38,10 @@ class MyApp extends StatelessWidget {
         "/siswa": (context) => SiswaPage(username: "siswa", kelas: '',),
         "/jadwalSiswa": (context) => JadwalSiswaPage(kelas: '',),
         "/nilaiSiswa": (context) => NilaiSiswaPage(),
-        "/pengumumanSiswa": (context) => const PengumumanSiswaPage(),
+        "/pengumumanSiswa": (context) => PengumumanSiswaPage(),
         "/inputNilai": (context) => const InputNilaiGuruPage(),
         "/jadwalGuru": (context) => JadwalGuruPage(),
-        "/pengumumanGuru": (context) => const PengumumanSiswaPage(),
+        "/pengumumanGuru": (context) => PengumumanGuruPage(),
         "/kelolaGuru": (context) => KelolaGuruPage(),
         "/kelolaJadwal": (context) => KelolaJadwalPage(),
       },

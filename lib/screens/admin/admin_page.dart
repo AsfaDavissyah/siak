@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:siak/screens/admin/kelola_siswa_page.dart';
 import 'package:siak/screens/admin/nilai_admin_page.dart';
+import 'package:siak/screens/admin/pengumuman_admin_page.dart';
 
 class AdminPage extends StatelessWidget {
   final String username;
@@ -68,12 +69,19 @@ class AdminPage extends StatelessWidget {
             const SizedBox(height: 12),
 
             // Pengumuman
+            // Kelola Pengumuman
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, "/pengumumanAdmin");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => PengumumanAdminPage()),
+                );
               },
               child: const Text("Kelola Pengumuman"),
             ),
+
+            const SizedBox(height: 12),
+
             const SizedBox(height: 12),
 
             ElevatedButton(

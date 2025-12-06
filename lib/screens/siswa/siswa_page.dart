@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:siak/screens/siswa/nilai_siswa_page.dart';
+import 'package:siak/screens/siswa/pengumuman_siswa_page.dart';
 import 'jadwal_siswa_page.dart';
 
 class SiswaPage extends StatelessWidget {
@@ -58,7 +59,17 @@ class SiswaPage extends StatelessWidget {
 
             const SizedBox(height: 12),
 
-            ElevatedButton(onPressed: () {}, child: const Text("Pengumuman")),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => PengumumanSiswaPage(),
+                  ),
+                );
+              },
+              child: const Text("Pengumuman"),
+            ),
 
             const Spacer(),
 

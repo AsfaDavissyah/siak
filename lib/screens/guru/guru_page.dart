@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:siak/screens/guru/pengumuman_guru_page.dart';
 import 'input_nilai_guru_page.dart';
 import 'jadwal_guru_page.dart';
 
@@ -60,7 +61,14 @@ class GuruPage extends StatelessWidget {
 
             // ✅ PENGUMUMAN (NANTI KITA SAMBUNGKAN KE ADMIN)
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => PengumumanGuruPage(),
+                  ),
+                );
+              },
               child: const Text("Pengumuman"),
             ),
 
