@@ -2,8 +2,8 @@ class UserModel {
   final String uid;
   final String name;
   final String username;
-  final String role;        // admin, guru, siswa
-  final String linkedId;    // id siswa/guru
+  final String role;
+  final String linkedId;
   final String kelas;
 
   UserModel({

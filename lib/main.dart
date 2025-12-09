@@ -5,7 +5,6 @@ import 'package:siak/screens/guru/input_nilai_guru_page.dart';
 import 'package:siak/screens/guru/pengumuman_guru_page.dart';
 import 'package:siak/screens/siswa/nilai_siswa_page.dart';
 import 'package:siak/screens/siswa/pengumuman_siswa_page.dart';
-import 'package:siak/screens/guru/pengumuman_guru_page.dart';
 import 'package:siak/screens/guru/jadwal_guru_page.dart';
 import 'firebase_options.dart';
 import 'screens/admin/admin_page.dart';

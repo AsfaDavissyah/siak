@@ -32,31 +32,88 @@ class _EditSiswaPageState extends State<EditSiswaPage> {
     jurusanC = TextEditingController(text: widget.data["jurusan"]);
   }
 
+  Widget buildInput({
+    required String label,
+    required TextEditingController controller,
+  }) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        filled: true,
+        fillColor: Colors.grey.withOpacity(0.08),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.blue, width: 1.3),
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      appBar: AppBar(title: const Text("Edit Data Siswa")),
+      appBar: AppBar(
+        title: const Text("Edit Data Siswa"),
+        centerTitle: true,
+        elevation: 0,
+      ),
+
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         child: ListView(
           children: [
-            TextField(controller: nisC, decoration: const InputDecoration(labelText: "NIS")),
-            TextField(controller: namaC, decoration: const InputDecoration(labelText: "Nama")),
-            TextField(controller: kelasC, decoration: const InputDecoration(labelText: "Kelas")),
-            TextField(controller: jurusanC, decoration: const InputDecoration(labelText: "Jurusan")),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () async {
-                await siswaService.updateSiswa(widget.id, {
-                  "nis": nisC.text,
-                  "nama": namaC.text,
-                  "kelas": kelasC.text,
-                  "jurusan": jurusanC.text,
-                });
+            const SizedBox(height: 10),
+            Text(
+              "Perbarui data siswa dengan benar.",
+              style: TextStyle(
+                fontSize: 14,
+                color: isDark ? Colors.white70 : Colors.black54,
+              ),
+            ),
+            const SizedBox(height: 20),
 
-                Navigator.pop(context);
-              },
-              child: const Text("Update"),
+            buildInput(label: "NIS", controller: nisC),
+            const SizedBox(height: 16),
+
+            buildInput(label: "Nama", controller: namaC),
+            const SizedBox(height: 16),
+
+            buildInput(label: "Kelas", controller: kelasC),
+            const SizedBox(height: 16),
+
+            buildInput(label: "Jurusan", controller: jurusanC),
+            const SizedBox(height: 28),
+
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () async {
+                  await siswaService.updateSiswa(widget.id, {
+                    "nis": nisC.text,
+                    "nama": namaC.text,
+                    "kelas": kelasC.text,
+                    "jurusan": jurusanC.text,
+                  });
+
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                ),
+                child: const Text(
+                  "Update Data Siswa",
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
             )
           ],
         ),

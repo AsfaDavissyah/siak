@@ -9,21 +9,20 @@ class NilaiSiswaPage extends StatelessWidget {
   final NilaiService nilaiService = NilaiService();
   final String siswaId = FirebaseAuth.instance.currentUser!.uid;
 
-  
-
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
-        
         title: const Text("Nilai Saya"),
         centerTitle: true,
+        elevation: 0,
       ),
+
       body: StreamBuilder<QuerySnapshot>(
         stream: nilaiService.getNilaiBySiswa(siswaId),
         builder: (context, snapshot) {
-          print("UID LOGIN SISWA: $siswaId");
-      
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -33,41 +32,105 @@ class NilaiSiswaPage extends StatelessWidget {
               child: Text("Belum ada nilai"),
             );
           }
-        
+
           final nilaiList = snapshot.data!.docs;
 
           return ListView.builder(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(20),
             itemCount: nilaiList.length,
             itemBuilder: (context, index) {
-              final data = nilaiList[index].data() as Map<String, dynamic>;
+              final n = nilaiList[index].data() as Map<String, dynamic>;
 
               return Card(
-                child: ListTile(
-                  title: Text(
-                    data['mapel'] ?? "-",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                  subtitle: Column(
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                margin: const EdgeInsets.only(bottom: 16),
+
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 6),
-                      Text("Tugas : ${data['tugas']}"),
-                      Text("UTS    : ${data['uts']}"),
-                      Text("UAS    : ${data['uas']}"),
-                      const SizedBox(height: 6),
+                      // MAPEL
                       Text(
-                        "Nilai Akhir : ${data['nilaiAkhir'].toStringAsFixed(1)}",
-                        style: const TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                      Text(
-                        "Predikat : ${data['predikat']}",
-                        style: const TextStyle(
+                        n["mapel"] ?? "-",
+                        style: TextStyle(
+                          fontSize: 18,
                           fontWeight: FontWeight.bold,
+                          color: isDark ? Colors.white : Colors.black87,
                         ),
+                      ),
+
+                      const SizedBox(height: 12),
+
+                      // NILAI TUGAS
+                      Row(
+                        children: [
+                          Icon(Icons.assignment_outlined, size: 18),
+                          const SizedBox(width: 8),
+                          Text("Tugas: ${n['tugas']}"),
+                        ],
+                      ),
+
+                      const SizedBox(height: 6),
+
+                      // NILAI UTS
+                  
+                      Row(
+                        children: [
+                          Icon(Icons.quiz_outlined, size: 18),
+                          const SizedBox(width: 8),
+                          Text("UTS: ${n['uts']}"),
+                        ],
+                      ),
+
+                      const SizedBox(height: 6),
+
+                      // NILAI UAS
+                      Row(
+                        children: [
+                          Icon(Icons.menu_book_outlined, size: 18),
+                          const SizedBox(width: 8),
+                          Text("UAS: ${n['uas']}"),
+                        ],
+                      ),
+
+                      const SizedBox(height: 12),
+                      const Divider(),
+
+                      // NILAI AKHIR
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          const Icon(Icons.grade_outlined, size: 20),
+                          const SizedBox(width: 8),
+                          Text(
+                            "Nilai Akhir: ${n['nilaiAkhir'].toStringAsFixed(1)}",
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 6),
+
+                      // PREDIKAT
+                      Row(
+                        children: [
+                          const Icon(Icons.flag_outlined, size: 20),
+                          const SizedBox(width: 8),
+                          Text(
+                            "Predikat: ${n['predikat']}",
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),

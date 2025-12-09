@@ -11,11 +11,15 @@ class JadwalSiswaPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Jadwal Pelajaran"),
         centerTitle: true,
+        elevation: 0,
       ),
+
       body: StreamBuilder<QuerySnapshot>(
         stream: jadwalService.getJadwalByKelas(kelas),
         builder: (context, snapshot) {
@@ -32,21 +36,68 @@ class JadwalSiswaPage extends StatelessWidget {
           final jadwalList = snapshot.data!.docs;
 
           return ListView.builder(
+            padding: const EdgeInsets.all(20),
             itemCount: jadwalList.length,
-            padding: const EdgeInsets.all(16),
             itemBuilder: (context, index) {
-              final data = jadwalList[index];
+              final j = jadwalList[index].data() as Map<String, dynamic>;
 
               return Card(
-                child: ListTile(
-                  title: Text(
-                    data["mapel"],
-                    style: const TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                  subtitle: Text(
-                    "Guru: ${data["guruNama"]}\n"
-                    "Hari: ${data["hari"]}\n"
-                    "Jam: ${data["jam"]}",
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                margin: const EdgeInsets.only(bottom: 16),
+
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // MAPEL
+                      Text(
+                        j["mapel"] ?? "-",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: isDark ? Colors.white : Colors.black87,
+                        ),
+                      ),
+
+                      const SizedBox(height: 12),
+
+                      // GURU
+                      
+
+                      Row(
+                        children: [
+                          const Icon(Icons.person_outline, size: 18),
+                          const SizedBox(width: 8),
+                          Text("Guru: ${j['guruNama']}"),
+                        ],
+                      ),
+
+                      const SizedBox(height: 6),
+
+                      // HARI
+                      Row(
+                        children: [
+                          const Icon(Icons.calendar_today, size: 18),
+                          const SizedBox(width: 8),
+                          Text("Hari: ${j['hari']}"),
+                        ],
+                      ),
+
+                      const SizedBox(height: 6),
+
+                      // JAM
+                      Row(
+                        children: [
+                          const Icon(Icons.access_time, size: 18),
+                          const SizedBox(width: 8),
+                          Text("Jam: ${j['jam']}"),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               );

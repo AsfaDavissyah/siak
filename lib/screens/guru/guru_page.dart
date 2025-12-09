@@ -14,70 +14,146 @@ class GuruPage extends StatelessWidget {
     Navigator.pushReplacementNamed(context, "/");
   }
 
+  Widget buildMenuCard({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+          child: Row(
+            children: [
+              Icon(icon, size: 28),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              const Icon(Icons.arrow_forward_ios, size: 16),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Dashboard Guru"),
-        centerTitle: true,
         automaticallyImplyLeading: false,
+        elevation: 0,
       ),
+
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Selamat datang, $username",
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 20),
 
-            // ✅ LIHAT JADWAL
-            ElevatedButton(
-              onPressed: () {
+            // ======================================================
+            // HEADER & LOGOUT
+            // ======================================================
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Text kiri
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Selamat datang,",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: isDark ? Colors.white70 : Colors.black54,
+                      ),
+                    ),
+                    Text(
+                      username,
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+
+                const Spacer(),
+
+                // Logout button
+                TextButton.icon(
+                  onPressed: () => logout(context),
+                  icon: const Icon(Icons.logout, color: Colors.red),
+                  label: const Text(
+                    "Logout",
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 30),
+
+            const Text(
+              "Menu Guru",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // ======================
+            // MENU LIST
+            // ======================
+            buildMenuCard(
+              icon: Icons.schedule_outlined,
+              title: "Jadwal Mengajar",
+              onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => JadwalGuruPage()),
                 );
               },
-              child: const Text("Jadwal Mengajar"),
             ),
 
-            const SizedBox(height: 12),
-
-            // ✅ INPUT NILAI
-            ElevatedButton(
-              onPressed: () {
+            buildMenuCard(
+              icon: Icons.edit_note_outlined,
+              title: "Input Nilai",
+              onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const InputNilaiGuruPage()),
                 );
               },
-              child: const Text("Input Nilai"),
             ),
 
-            const SizedBox(height: 12),
-
-            // ✅ PENGUMUMAN (NANTI KITA SAMBUNGKAN KE ADMIN)
-            ElevatedButton(
-              onPressed: () {
+            buildMenuCard(
+              icon: Icons.campaign_outlined,
+              title: "Pengumuman",
+              onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => PengumumanGuruPage(),
-                  ),
+                  MaterialPageRoute(builder: (_) => PengumumanGuruPage()),
                 );
               },
-              child: const Text("Pengumuman"),
-            ),
-
-            const Spacer(),
-
-            ElevatedButton(
-              onPressed: () => logout(context),
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              child: const Text("Logout"),
             ),
           ],
         ),

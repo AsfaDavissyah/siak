@@ -11,8 +11,14 @@ class KelolaJadwalPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      appBar: AppBar(title: const Text("Kelola Jadwal Mengajar")),
+      appBar: AppBar(
+        title: const Text("Kelola Jadwal Mengajar"),
+        centerTitle: true,
+        elevation: 0,
+      ),
       body: StreamBuilder<QuerySnapshot>(
         stream: jadwalService.getAllJadwal(),
         builder: (context, snapshot) {
@@ -27,44 +33,147 @@ class KelolaJadwalPage extends StatelessWidget {
           }
 
           return ListView.builder(
+            padding: const EdgeInsets.all(16),
             itemCount: docs.length,
             itemBuilder: (context, index) {
               final data = docs[index];
               final j = data.data() as Map<String, dynamic>;
 
-              return ListTile(
-                title: Text("${j["mapel"]} - ${j["kelas"]}"),
-                subtitle: Text("${j["hari"]} | ${j["jam"]} | ${j["guruNama"]}"),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.edit),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => EditJadwalPage(
-                              id: data.id,
-                              data: j,
+              return Card(
+                elevation: 3,
+                margin: const EdgeInsets.only(bottom: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // ICON MAPEL
+                      CircleAvatar(
+                        radius: 26,
+                        backgroundColor: isDark
+                            ? Colors.teal.withOpacity(0.3)
+                            : Colors.teal.withOpacity(0.15),
+                        child: Icon(
+                          Icons.book_rounded,
+                          size: 28,
+                          color: isDark ? Colors.white : Colors.teal,
+                        ),
+                      ),
+
+                      const SizedBox(width: 14),
+
+                      // INFORMASI JADWAL
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Mapel + Kelas
+                            Text(
+                              "${j["mapel"]} - ${j["kelas"]}",
+                              style: const TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
+
+                            const SizedBox(height: 4),
+
+                            // Hari & Jam
+                            Row(
+                              children: [
+                                Icon(Icons.calendar_today_rounded,
+                                    size: 16,
+                                    color: isDark
+                                        ? Colors.white70
+                                        : Colors.black54),
+                                const SizedBox(width: 4),
+                                Text(
+                                  j["hari"],
+                                  style: TextStyle(
+                                    color: isDark
+                                        ? Colors.white70
+                                        : Colors.black54,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Icon(Icons.schedule_rounded,
+                                    size: 16,
+                                    color: isDark
+                                        ? Colors.white70
+                                        : Colors.black54),
+                                const SizedBox(width: 4),
+                                Text(
+                                  j["jam"],
+                                  style: TextStyle(
+                                    color: isDark
+                                        ? Colors.white70
+                                        : Colors.black54,
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            const SizedBox(height: 6),
+
+                            // Nama Guru
+                            Row(
+                              children: [
+                                Icon(Icons.person_outline_rounded,
+                                    size: 16,
+                                    color: isDark
+                                        ? Colors.white70
+                                        : Colors.black54),
+                                const SizedBox(width: 4),
+                                Text(
+                                  j["guruNama"],
+                                  style: TextStyle(
+                                    color: isDark
+                                        ? Colors.white70
+                                        : Colors.black54,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // ACTION BUTTONS
+                      Column(
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.edit, color: Colors.blue),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      EditJadwalPage(id: data.id, data: j),
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () async {
-                        await jadwalService.deleteJadwal(data.id);
-                      },
-                    ),
-                  ],
+                          IconButton(
+                            icon:
+                                const Icon(Icons.delete, color: Colors.redAccent),
+                            onPressed: () async {
+                              await jadwalService.deleteJadwal(data.id);
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               );
             },
           );
         },
       ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(

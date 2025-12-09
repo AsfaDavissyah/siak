@@ -14,92 +14,159 @@ class AdminPage extends StatelessWidget {
     Navigator.pushReplacementNamed(context, "/");
   }
 
+  Widget buildMenuCard({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+          child: Row(
+            children: [
+              Icon(icon, size: 28),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              const Icon(Icons.arrow_forward_ios, size: 16),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Dashboard Admin"),
         automaticallyImplyLeading: false,
-        centerTitle: true,
+        elevation: 0,
       ),
+
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Selamat datang, $username",
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // TEKS SELAMAT DATANG
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Selamat datang,",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: isDark ? Colors.white70 : Colors.black54,
+                      ),
+                    ),
+                    Text(
+                      username,
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+
+                const Spacer(),
+
+                // LOGOUT BUTTON + ICON
+                TextButton.icon(
+                  onPressed: () => logout(context),
+                  icon: const Icon(Icons.logout, color: Colors.red),
+                  label: const Text(
+                    "Logout",
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 8),
-            const Text(
-              "Silakan pilih menu di bawah ini:",
-              style: TextStyle(color: Colors.black54),
-            ),
+
             const SizedBox(height: 30),
 
-            // Kelola Siswa
-            ElevatedButton(
-              onPressed: () {
+            const Text(
+              "Menu Admin",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // MENU CARDS
+            buildMenuCard(
+              icon: Icons.people_alt_outlined,
+              title: "Kelola Siswa",
+              onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => KelolaSiswaPage()),
                 );
               },
-              child: const Text("Kelola Siswa"),
             ),
-            const SizedBox(height: 12),
 
-            // Kelola Guru
-            ElevatedButton(
-              onPressed: () {
+            buildMenuCard(
+              icon: Icons.person_outline,
+              title: "Kelola Guru",
+              onTap: () {
                 Navigator.pushNamed(context, "/kelolaGuru");
               },
-              child: const Text("Kelola Data Guru"),
             ),
-            const SizedBox(height: 12),
 
-            // Kelola Jadwal
-            ElevatedButton(
-              onPressed: () {
+            buildMenuCard(
+              icon: Icons.schedule_outlined,
+              title: "Kelola Jadwal",
+              onTap: () {
                 Navigator.pushNamed(context, "/kelolaJadwal");
               },
-              child: const Text("Kelola Jadwal"),
             ),
-            const SizedBox(height: 12),
 
-            // Pengumuman
-            // Kelola Pengumuman
-            ElevatedButton(
-              onPressed: () {
+            buildMenuCard(
+              icon: Icons.campaign_outlined,
+              title: "Kelola Pengumuman",
+              onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => PengumumanAdminPage()),
                 );
               },
-              child: const Text("Kelola Pengumuman"),
             ),
 
-            const SizedBox(height: 12),
-
-            const SizedBox(height: 12),
-
-            ElevatedButton(
-              onPressed: () {
+            buildMenuCard(
+              icon: Icons.bar_chart_outlined,
+              title: "Lihat Nilai Siswa",
+              onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => NilaiAdminPage()),
                 );
               },
-              child: const Text("Lihat Nilai Siswa"),
-            ),
-
-            const Spacer(),
-
-            ElevatedButton(
-              onPressed: () => logout(context),
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              child: const Text("Logout"),
             ),
           ],
         ),
