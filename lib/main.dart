@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+// import 'package:siak/screens/admin/acc_guru_page.dart';
 import 'package:siak/screens/admin/kelola_jadwal_page.dart';
+import 'package:siak/screens/admin/pending_guru_page.dart';
+import 'package:siak/screens/admin/pending_siswa_page.dart';
 import 'package:siak/screens/guru/input_nilai_guru_page.dart';
 import 'package:siak/screens/guru/pengumuman_guru_page.dart';
 import 'package:siak/screens/siswa/nilai_siswa_page.dart';
@@ -43,6 +46,8 @@ class MyApp extends StatelessWidget {
         "/pengumumanGuru": (context) => PengumumanGuruPage(),
         "/kelolaGuru": (context) => KelolaGuruPage(),
         "/kelolaJadwal": (context) => KelolaJadwalPage(),
+        "/accGuru": (context) => PendingGuruPage(),
+        "/accSiswa": (context) => PendingSiswaPage(),
       },
     );
   }

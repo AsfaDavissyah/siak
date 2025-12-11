@@ -5,6 +5,10 @@ class UserModel {
   final String role;
   final String linkedId;
   final String kelas;
+  final String email;
+  final bool isApproved;
+  final String? approvalMessage;
+
 
   UserModel({
     required this.uid,
@@ -13,6 +17,10 @@ class UserModel {
     required this.role,
     required this.linkedId,
     required this.kelas,
+    required this.email,
+    required this.isApproved,
+    this.approvalMessage,
+    
   });
 
   Map<String, dynamic> toMap() {
@@ -23,17 +31,22 @@ class UserModel {
       'role': role,
       'linkedId': linkedId,
       'kelas': kelas,
+      'email': email,
+      'isApproved': isApproved,
     };
   }
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
-      uid: map['uid'],
-      name: map['name'],
-      username: map['username'],
-      role: map['role'],
-      linkedId: map['linkedId'],
-      kelas: map['kelas'] ?? '',
+      uid: (map['uid'] ?? '') as String,
+      name: (map['name'] ?? '') as String,
+      username: (map['username'] ?? '') as String,
+      role: (map['role'] ?? '') as String,
+      linkedId: (map['linkedId'] ?? '') as String,
+      kelas: (map['kelas'] ?? '') as String,
+      email: (map['email'] ?? '') as String,
+      isApproved: (map['isApproved'] ?? false) as bool,
+      approvalMessage: map['approvalMessage'] ?? '',
     );
   }
 }

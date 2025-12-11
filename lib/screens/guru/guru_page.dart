@@ -6,6 +6,7 @@ import 'jadwal_guru_page.dart';
 
 class GuruPage extends StatelessWidget {
   final String username;
+  
 
   const GuruPage({super.key, required this.username});
 
@@ -13,6 +14,7 @@ class GuruPage extends StatelessWidget {
     await FirebaseAuth.instance.signOut();
     Navigator.pushReplacementNamed(context, "/");
   }
+  
 
   Widget buildMenuCard({
     required IconData icon,

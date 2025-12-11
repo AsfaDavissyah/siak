@@ -5,17 +5,29 @@ class UserService {
   final CollectionReference usersRef =
       FirebaseFirestore.instance.collection('users');
 
-  // SIMPAN DATA USER SETELAH REGISTER
+  String? tempApprovalMessage;    
+  
+
+  // SIMPAN DATA USER (MENERIMA UserModel)
   Future<void> saveUserData(UserModel user) async {
-    return await usersRef.doc(user.uid).set(user.toMap());
+    return await usersRef
+        .doc(user.uid)
+        .set(user.toMap(), SetOptions(merge: true));
   }
 
-  // AMBIL DATA USER BERDASARKAN UID
+  // AMBIL DATA USER BERDASARKAN UID -> UserModel
   Future<UserModel?> getUserByUid(String uid) async {
     DocumentSnapshot doc = await usersRef.doc(uid).get();
 
     if (!doc.exists) return null;
 
-    return UserModel.fromMap(doc.data() as Map<String, dynamic>);
+    final data = doc.data() as Map<String, dynamic>;
+    return UserModel.fromMap(data);
+  }
+
+  Future<void> clearApprovalMessage(String uid) async {
+    await usersRef.doc(uid).update({
+      "approvalMessage": ""
+    });
   }
 }

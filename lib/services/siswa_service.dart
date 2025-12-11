@@ -27,8 +27,36 @@ class SiswaService {
     // 2. Update linkedId di users
     await usersRef.doc(uid).update({
       "linkedId": doc.id,
+      "name": nama,
+      "kelas": kelas,
     });
   }
+
+  Future<void> accSiswa({
+  required String uid,
+  required String nis,
+  required String nama,
+  required String kelas,
+  required String jurusan,
+}) async {
+  // 1. Tambah ke koleksi siswa
+  final doc = await siswaRef.add({
+    "uid": uid,
+    "nis": nis,
+    "nama": nama,
+    "kelas": kelas,
+    "jurusan": jurusan,
+  });
+
+  // 2. Update user
+  await usersRef.doc(uid).update({
+    "linkedId": doc.id,
+    "kelas": kelas,
+    "isApproved": true,
+    "approvalMessage": "Akun Anda telah disetujui oleh admin.",
+  });
+}
+
 
   // ✅ AMBIL SEMUA DATA SISWA
   Stream<QuerySnapshot> getAllSiswa() {

@@ -140,6 +140,22 @@ class AdminPage extends StatelessWidget {
             ),
 
             buildMenuCard(
+              icon: Icons.person_outline,
+              title: "List ACC Guru Pending",
+              onTap: () {
+                Navigator.pushNamed(context, "/accGuru");
+              },
+            ),
+
+            buildMenuCard(
+              icon: Icons.person_outline,
+              title: "List ACC Guru Siswa",
+              onTap: () {
+                Navigator.pushNamed(context, "/accSiswa");
+              },
+            ),
+
+            buildMenuCard(
               icon: Icons.schedule_outlined,
               title: "Kelola Jadwal",
               onTap: () {

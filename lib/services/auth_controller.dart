@@ -1,17 +1,15 @@
 import 'auth_service.dart';
 import 'user_service.dart';
 import '../models/user_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthController {
   final AuthService authService = AuthService();
   final UserService userService = UserService();
 
-  // ✅ EMAIL ADMIN TETAP (KUNCI UTAMA)
   static const String adminEmail = "admin@sisakademik.com";
 
-  // ==========================
-  // REGISTER USER
-  // ==========================
+  // REGISTER
   Future<void> registerAccount({
     required String email,
     required String password,
@@ -19,74 +17,87 @@ class AuthController {
     required String username,
     required String role,
     required String linkedId,
+    required bool isApproved,
+    String kelas = '',
   }) async {
-
-    // 1️⃣ Validasi input dasar
     if (email.isEmpty || password.isEmpty || username.isEmpty) {
       throw Exception("Email, password, dan username wajib diisi.");
     }
 
-    // 2️⃣ BLOKIR ADMIN DARI REGISTER UMUM
     if (email.toLowerCase() == adminEmail) {
-      throw Exception("Akun admin tidak boleh didaftarkan dari halaman register.");
+      throw Exception(
+        "Akun admin tidak boleh didaftarkan dari halaman register.",
+      );
     }
 
     if (role.toLowerCase() == "admin") {
-      throw Exception("Role admin hanya boleh dibuat satu kali oleh sistem.");
+      throw Exception("Role admin hanya boleh dibuat oleh sistem.");
     }
 
-    // 3️⃣ Validasi role yang diizinkan
     const allowedRoles = ["guru", "siswa"];
     if (!allowedRoles.contains(role.toLowerCase())) {
-      throw Exception("Role tidak valid. Hanya guru atau siswa yang diperbolehkan.");
+      throw Exception(
+        "Role tidak valid. Hanya guru atau siswa yang diperbolehkan.",
+      );
     }
 
-    // 4️⃣ REGISTER ke Firebase Auth
-    final user = await authService.registerUser(
+    // register ke Firebase Auth
+    final userCredential = await authService.registerUser(
       email: email,
       password: password,
     );
 
-    if (user == null) {
+    if (userCredential == null) {
       throw Exception("Gagal membuat akun.");
     }
 
-    // 5️⃣ SIMPAN DATA KE FIRESTORE
+    final uid = userCredential.uid;
+
     final userModel = UserModel(
-      uid: user.uid,
+      uid: uid,
       name: name,
       username: username,
-      role: role.toLowerCase(), // hanya guru / siswa
+      role: role.toLowerCase(),
       linkedId: linkedId,
-      kelas: ''
+      kelas: kelas,
+      email: email,
+      isApproved: isApproved,
     );
 
     await userService.saveUserData(userModel);
   }
 
-  // ==========================
-  // LOGIN USER
-  // ==========================
+  // LOGIN
   Future<UserModel?> loginAccount({
     required String email,
     required String password,
   }) async {
-
-    // 1️⃣ Login ke Auth
-    final user = await authService.loginUser(
-      email: email,
-      password: password,
-    );
+    final user = await authService.loginUser(email: email, password: password);
 
     if (user == null) {
       throw Exception("Login gagal.");
     }
 
-    // 2️⃣ Ambil data user dari Firestore
     final userData = await userService.getUserByUid(user.uid);
 
     if (userData == null) {
       throw Exception("Data user tidak ditemukan di Firestore.");
+    }
+
+    // jika ingin mencegah login sebelum isApproved:
+    // 🔥 ADMIN Selalu diizinkan masuk
+    if (userData.role != "admin" && !userData.isApproved) {
+      throw Exception("Akun Anda sedang diproses oleh admin.");
+    }
+
+    // Jika ada pesan persetujuan → tampilkan snackbar
+    if (userData?.approvalMessage != null &&
+        userData!.approvalMessage!.isNotEmpty) {
+      // Simpan pesan agar bisa digunakan di UI
+      userService.tempApprovalMessage = userData.approvalMessage!;
+
+      // Hapus pesan dari database agar tidak tampil lagi
+      await userService.clearApprovalMessage(user.uid);
     }
 
     return userData;

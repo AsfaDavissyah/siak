@@ -30,10 +30,12 @@ class _RegisterPageState extends State<RegisterPage> {
         username: usernameC.text.trim(),
         role: selectedRole,
         linkedId: "",
+        isApproved: false,
+        kelas: "",
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Registrasi berhasil. Silakan login.")),
+        const SnackBar(content: Text("Registrasi berhasil. Tunggu Admin Menyetujui.")),
       );
 
       Navigator.pushReplacementNamed(context, "/");
