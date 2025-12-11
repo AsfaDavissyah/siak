@@ -61,7 +61,7 @@ class AuthController {
       linkedId: linkedId,
       kelas: kelas,
       email: email,
-      isApproved: isApproved,
+      isApproved: false,
     );
 
     await userService.saveUserData(userModel);

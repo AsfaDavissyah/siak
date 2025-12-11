@@ -37,7 +37,13 @@ class _LoginPageState extends State<LoginPage> {
           context,
           MaterialPageRoute(builder: (_) => AdminPage(username: user.username)),
         );
-      } else if (user.role == "guru") {
+      }
+
+      if (user.isApproved == false) {
+        throw Exception("Akun Anda belum disetujui admin.");
+      }
+
+      if (user.role == "guru") {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => GuruPage(username: user.username)),
@@ -54,9 +60,9 @@ class _LoginPageState extends State<LoginPage> {
         throw Exception("Role tidak dikenali.");
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Login gagal: $e")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Login gagal: $e")));
     }
 
     setState(() => isLoading = false);
@@ -131,7 +137,9 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         child: isLoading
-                            ? const CircularProgressIndicator(color: Colors.white)
+                            ? const CircularProgressIndicator(
+                                color: Colors.white,
+                              )
                             : const Text(
                                 "Login",
                                 style: TextStyle(
@@ -159,7 +167,7 @@ class _LoginPageState extends State<LoginPage> {
                   "Belum punya akun? Daftar di sini",
                   style: TextStyle(fontSize: 15),
                 ),
-              )
+              ),
             ],
           ),
         ),

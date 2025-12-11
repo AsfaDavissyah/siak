@@ -53,7 +53,7 @@ class SiswaService {
     "linkedId": doc.id,
     "kelas": kelas,
     "isApproved": true,
-    "approvalMessage": "Akun Anda telah disetujui oleh admin.",
+    // "approvalMessage": "Akun Anda telah disetujui oleh admin.",
   });
 }
 

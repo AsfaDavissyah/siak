@@ -5,17 +5,18 @@ class UserService {
   final CollectionReference usersRef =
       FirebaseFirestore.instance.collection('users');
 
-  String? tempApprovalMessage;    
-  
+  // Menyimpan pesan persetujuan setelah login (optional)
+  String? tempApprovalMessage;
 
-  // SIMPAN DATA USER (MENERIMA UserModel)
+  // SIMPAN / UPDATE DATA USER
   Future<void> saveUserData(UserModel user) async {
-    return await usersRef
-        .doc(user.uid)
-        .set(user.toMap(), SetOptions(merge: true));
+    await usersRef.doc(user.uid).set(
+      user.toMap(),
+      SetOptions(merge: true), // agar tidak menghapus field lain
+    );
   }
 
-  // AMBIL DATA USER BERDASARKAN UID -> UserModel
+  // AMBIL USER BY UID
   Future<UserModel?> getUserByUid(String uid) async {
     DocumentSnapshot doc = await usersRef.doc(uid).get();
 
@@ -25,9 +26,10 @@ class UserService {
     return UserModel.fromMap(data);
   }
 
+  // HAPUS PESAN APPROVAL SETELAH USER MELIHAT SEKALI
   Future<void> clearApprovalMessage(String uid) async {
     await usersRef.doc(uid).update({
-      "approvalMessage": ""
+      "approvalMessage": "",
     });
   }
 }
