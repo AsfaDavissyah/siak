@@ -86,7 +86,8 @@ class AuthController {
 
     // jika ingin mencegah login sebelum isApproved:
     // 🔥 ADMIN Selalu diizinkan masuk
-    if (userData.role != "admin" && !userData.isApproved) {
+    if (userData.role != "admin" &&
+        (userData.isApproved == false || userData.isApproved == null)) {
       throw Exception("Akun Anda sedang diproses oleh admin.");
     }
 

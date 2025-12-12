@@ -45,7 +45,9 @@ class UserModel {
       linkedId: (map['linkedId'] ?? '') as String,
       kelas: (map['kelas'] ?? '') as String,
       email: (map['email'] ?? '') as String,
-      isApproved: (map['isApproved'] ?? false) as bool,
+      isApproved: map['isApproved'] is bool
+        ? map['isApproved']
+        : false,
       approvalMessage: map['approvalMessage'] ?? '',
     );
   }
